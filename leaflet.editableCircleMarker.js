@@ -1,19 +1,19 @@
 /*
- * Basado en
+ * Based in
  *   https://gist.github.com/glenrobertson/3630960
  *   https://github.com/Leaflet/Leaflet/blob/master/src/layer/marker/Marker.js
- * 
+ *
  * */
 
 L.EditableCircleMarker = L.Class.extend({
     includes: L.Mixin.Events,
- 
+
     options: {
         weight: 1,
         clickable: false,
         draggable: true
     },
- 
+
     initialize: function (latlng, radius, options) {
         options = options || {};
         L.Util.setOptions(this, options);
@@ -22,18 +22,18 @@ L.EditableCircleMarker = L.Class.extend({
         this._markerIcon = new L.DivIcon({
             className: this.options.className
         }),
-        
+
         this._marker = new L.Marker(latlng, {
             icon: this._markerIcon,
             draggable: this.options.draggable
         });
-        
+
         if ( this.options.popup ) {
             this._marker.bindPopup(this.options.popup);
         }
- 
+
         this._circle = new L.Circle(latlng, radius, this.options);
- 
+
         // move circle when marker is dragged
         var self = this;
         this._marker.on('movestart', function() {
@@ -50,7 +50,7 @@ L.EditableCircleMarker = L.Class.extend({
             self.fire('moveend');
         });
     },
- 
+
     onAdd: function (map) {
         this._map = map;
         this._marker.onAdd(map);
@@ -59,21 +59,21 @@ L.EditableCircleMarker = L.Class.extend({
             this._marker.dragging.enable();
         this.fire('loaded');
     },
- 
+
     onRemove: function (map) {
         this._marker.onRemove(map);
         this._circle.onRemove(map);
         this.fire('unloaded');
     },
- 
+
     getBounds: function() {
         return this._circle.getBounds();
     },
- 
+
     getLatLng: function () {
         return this._latlng;
     },
- 
+
     setLatLng: function (latlng) {
         this._marker.fire('movestart');
         this._latlng = L.latLng(latlng);
@@ -81,28 +81,28 @@ L.EditableCircleMarker = L.Class.extend({
         this._circle.setLatLng(this._latlng);
         this._marker.fire('moveend');
     },
- 
+
     getRadius: function () {
         return this._radius;
     },
- 
+
     setRadius: function (meters) {
         //this._marker.fire('movestart');
         this._radius = meters;
         this._circle.setRadius(meters);
         //this._marker.fire('moveend');
     },
- 
+
     getCircleOptions: function () {
         return this._circle.options;
     },
- 
+
     setCircleStyle: function (style) {
         this._circle.setStyle(style);
     },
- 
+
 });
- 
+
 L.editableCircleMarker = function (latlng, radius, options) {
     return new L.EditableCircleMarker(latlng, radius, options);
 };
