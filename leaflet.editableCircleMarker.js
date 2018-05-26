@@ -28,6 +28,9 @@ L.EditableCircleMarker = L.Layer.extend({
             className: this.options.className
           })
         }
+        if (this.options.icon) {
+          markerOptions.icon = this.options.icon
+        }
         markerOptions.draggable = this.options.draggable
 
         this._marker = new L.Marker(latlng, markerOptions);
