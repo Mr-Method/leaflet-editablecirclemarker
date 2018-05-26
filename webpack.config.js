@@ -1,8 +1,8 @@
 module.exports = {
-  entry: './src/choropleth.js',
+  entry: './leaflet.editableCircleMarker.js',
   output: {
     path: __dirname + '/dist',
-    filename: 'choropleth.js'
+    filename: 'editablecirclemarker.js'
   },
   externals: {
     'leaflet': 'L'
