@@ -2,7 +2,7 @@
   "name": "leaflet-editablecirclemarker",
   "version": "1.0.0",
   "description": "EditableCircleMarker plugin for Leaflet",
-  "main": "leaflet.editableCircleMarker.js",
+  "main": "dist/editablecirclemarker.js",
   "scripts": {
     "build": "webpack -p",
     "watch": "webpack --watch",
