@@ -1,4 +1,4 @@
-# Leaflet Choropleth [![Build Status](https://travis-ci.org/jperelli/leaflet-editablecirclemarker.svg)](https://travis-ci.org/jperelli/leaflet-editablecirclemarker)
+# Leaflet editable Circle Marker [![Build Status](https://travis-ci.org/cualbondi/leaflet-editablecirclemarker.svg)](https://travis-ci.org/cualbondi/leaflet-editablecirclemarker)
 
 Combined marker with a circle below component plugin for Leaflet that behaves as a L.marker.
 
