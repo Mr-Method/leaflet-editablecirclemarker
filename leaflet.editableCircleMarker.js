@@ -76,6 +76,21 @@ L.EditableCircleMarker = L.Layer.extend({
         this.fire('unloaded');
     },
 
+    getEvents: function () {
+      return {
+        zoom: this.updateMarker,
+        viewreset: this.updateMarker
+      };
+    },
+
+    updateMarker: function() {
+      if (this._marker._icon && this._marker._map) {
+        var pos = this._marker._map.latLngToLayerPoint(this._marker._latlng).round();
+        this._marker._setPos(pos);
+      }
+      return this;
+    },
+
     getBounds: function() {
         return this._circle.getBounds();
     },
