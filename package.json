@@ -1,6 +1,6 @@
 {
   "name": "leaflet-editablecirclemarker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "EditableCircleMarker plugin for Leaflet",
   "main": "dist/editablecirclemarker.js",
   "scripts": {

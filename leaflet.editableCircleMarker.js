@@ -60,20 +60,15 @@ L.EditableCircleMarker = L.Layer.extend({
 
     onAdd: function (map) {
         this._map = map;
-        this._marker._map = map
-        this._marker.onAdd(map);
-        this._circle._map = map
-        this._circle.beforeAdd(map);
-        this._circle.onAdd(map);
+        map.addLayer(this._marker);
+        map.addLayer(this._circle);
         if ( this.options.draggable )
             this._marker.dragging.enable();
-        this.fire('loaded');
     },
 
     onRemove: function (map) {
-        this._marker.onRemove(map);
-        this._circle.onRemove(map);
-        this.fire('unloaded');
+        map.removeLayer(this._marker);
+        map.removeLayer(this._circle);
     },
 
     getEvents: function () {
