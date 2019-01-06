@@ -2,127 +2,155 @@
  * Based in
  *   https://gist.github.com/glenrobertson/3630960
  *   https://github.com/Leaflet/Leaflet/blob/master/src/layer/marker/Marker.js
+ *   https://github.com/smeijer/leaflet-geosearch/blob/develop/src/leafletControl.js
  *
  * */
 
-var L = require('leaflet')
+var EditableCircleMarker = null
 
-L.EditableCircleMarker = L.Layer.extend({
-    includes: L.Evented,
+function polluteGlobalL() {
 
-    options: {
-        weight: 1,
-        clickable: false,
-        draggable: true
-    },
+    if (!EditableCircleMarker) {
+        EditableCircleMarker = {
+            includes: L.Evented,
 
-    initialize: function (latlng, radius, options) {
-        options = options || {};
-        L.Util.setOptions(this, options);
-        this._latlng = L.latLng(latlng);
-        this._radius = radius;
+            options: {
+                weight: 1,
+                clickable: false,
+                draggable: true
+            },
 
-        var markerOptions = {}
-        if (this.options.className) {
-          markerOptions.icon = new L.DivIcon({
-            className: this.options.className
-          })
-        }
-        if (this.options.icon) {
-          markerOptions.icon = this.options.icon
-        }
-        markerOptions.draggable = this.options.draggable
+            initialize: function (latlng, radius, options) {
+                options = options || {};
+                L.Util.setOptions(this, options);
+                this._latlng = L.latLng(latlng);
+                this._radius = radius;
 
-        this._marker = new L.Marker(latlng, markerOptions);
+                var markerOptions = {}
+                if (this.options.className) {
+                    markerOptions.icon = new L.DivIcon({
+                        className: this.options.className
+                    })
+                }
+                if (this.options.icon) {
+                    markerOptions.icon = this.options.icon
+                }
+                markerOptions.draggable = this.options.draggable
 
-        if ( this.options.popup ) {
-            this._marker.bindPopup(this.options.popup);
-        }
+                this._marker = new L.Marker(latlng, markerOptions);
 
-        this._circle = new L.Circle(latlng, radius, this.options);
+                if (this.options.popup) {
+                    this._marker.bindPopup(this.options.popup);
+                }
 
-        // move circle when marker is dragged
-        var self = this;
-        this._marker.on('movestart', function() {
-            self.fire('movestart');
-        });
-        this._marker.on('move', function(latlng) {
-            var oldLatLng = self._latlng;
-            self._latlng = this._latlng;
-            self._circle.setLatLng(self._latlng);
-            return self.fire('move', { oldLatLng: oldLatLng, latlng: self._latlng });
-        });
-        this._marker.on('moveend', function() {
-            self._marker.setLatLng(this._latlng);
-            self.fire('moveend');
-        });
-    },
+                this._circle = new L.Circle(latlng, radius, this.options);
 
-    onAdd: function (map) {
-        this._map = map;
-        map.addLayer(this._marker);
-        map.addLayer(this._circle);
-        if ( this.options.draggable )
-            this._marker.dragging.enable();
-    },
+                // move circle when marker is dragged
+                var self = this;
+                this._marker.on('movestart', function () {
+                    self.fire('movestart');
+                });
+                this._marker.on('move', function (latlng) {
+                    var oldLatLng = self._latlng;
+                    self._latlng = this._latlng;
+                    self._circle.setLatLng(self._latlng);
+                    return self.fire('move', { oldLatLng: oldLatLng, latlng: self._latlng });
+                });
+                this._marker.on('moveend', function () {
+                    self._marker.setLatLng(this._latlng);
+                    self.fire('moveend');
+                });
+            },
 
-    onRemove: function (map) {
-        map.removeLayer(this._marker);
-        map.removeLayer(this._circle);
-    },
+            onAdd: function (map) {
+                this._map = map;
+                map.addLayer(this._marker);
+                map.addLayer(this._circle);
+                if (this.options.draggable)
+                    this._marker.dragging.enable();
+            },
 
-    getEvents: function () {
-      return {
-        zoom: this.updateMarker,
-        viewreset: this.updateMarker
-      };
-    },
+            onRemove: function (map) {
+                map.removeLayer(this._marker);
+                map.removeLayer(this._circle);
+            },
 
-    updateMarker: function() {
-      if (this._marker._icon && this._marker._map) {
-        var pos = this._marker._map.latLngToLayerPoint(this._marker._latlng).round();
-        this._marker._setPos(pos);
-      }
-      return this;
-    },
+            getEvents: function () {
+                return {
+                    zoom: this.updateMarker,
+                    viewreset: this.updateMarker
+                };
+            },
 
-    getBounds: function() {
-        return this._circle.getBounds();
-    },
+            updateMarker: function () {
+                if (this._marker._icon && this._marker._map) {
+                    var pos = this._marker._map.latLngToLayerPoint(this._marker._latlng).round();
+                    this._marker._setPos(pos);
+                }
+                return this;
+            },
 
-    getLatLng: function () {
-        return this._latlng;
-    },
+            getBounds: function () {
+                return this._circle.getBounds();
+            },
 
-    setLatLng: function (latlng) {
-        this._marker.fire('movestart');
-        this._latlng = L.latLng(latlng);
-        this._marker.setLatLng(this._latlng);
-        this._circle.setLatLng(this._latlng);
-        this._marker.fire('moveend');
-    },
+            getLatLng: function () {
+                return this._latlng;
+            },
 
-    getRadius: function () {
-        return this._radius;
-    },
+            setLatLng: function (latlng) {
+                this._marker.fire('movestart');
+                this._latlng = L.latLng(latlng);
+                this._marker.setLatLng(this._latlng);
+                this._circle.setLatLng(this._latlng);
+                this._marker.fire('moveend');
+            },
 
-    setRadius: function (meters) {
-        //this._marker.fire('movestart');
-        this._radius = meters;
-        this._circle.setRadius(meters);
-        //this._marker.fire('moveend');
-    },
+            getRadius: function () {
+                return this._radius;
+            },
 
-    getCircleOptions: function () {
-        return this._circle.options;
-    },
+            setRadius: function (meters) {
+                //this._marker.fire('movestart');
+                this._radius = meters;
+                this._circle.setRadius(meters);
+                //this._marker.fire('moveend');
+            },
 
-    setCircleStyle: function (style) {
-        this._circle.setStyle(style);
-    },
+            getCircleOptions: function () {
+                return this._circle.options;
+            },
 
-});
+            setCircleStyle: function (style) {
+                this._circle.setStyle(style);
+            },
 
-L.editableCircleMarker = module.exports = function (latlng, radius, options) {
-    return new L.EditableCircleMarker(latlng, radius, options);
-};
+        };
+    }
+
+    if (!L.EditableCircleMarker) {
+        L.EditableCircleMarker = L.Layer.extend(EditableCircleMarker)
+    }
+
+    if (!L.editableCircleMarker) {
+        L.editableCircleMarker = function (latlng, radius, options) {
+            return new L.EditableCircleMarker(latlng, radius, options);
+        };
+    }
+
+}
+
+if (L && L.Layer && L.Layer.extend) {
+    polluteGlobalL()
+}
+
+module.exports = function (latlng, radius, options) {
+
+    if (!L || !L.Layer || !L.Layer.extend) {
+        throw new Error('Leaflet must be loaded before instantiating the editableCircleMarker plugin');
+    }
+
+    polluteGlobalL()
+
+    return L.editableCircleMarker(latlng, radius, options)
+}

@@ -1,6 +1,6 @@
 {
   "name": "leaflet-editablecirclemarker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "EditableCircleMarker plugin for Leaflet",
   "main": "dist/editablecirclemarker.js",
   "scripts": {
@@ -22,13 +22,13 @@
   "devDependencies": {
     "jsdom": "^7.2.0",
     "mocha": "^2.3.4",
-    "mocha-jsdom": "^1.0.0",
+    "mocha-jsdom": "^1.2.0",
     "should": "^8.0.0",
     "snazzy": "^2.0.1",
     "standard": "^5.4.1",
     "webpack": "^2.5.1"
   },
-  "dependencies": {
+  "peerDependencies": {
     "leaflet": "^1.3.1"
   }
 }

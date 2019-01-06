@@ -3,8 +3,5 @@ module.exports = {
   output: {
     path: __dirname + '/dist',
     filename: 'editablecirclemarker.js'
-  },
-  externals: {
-    'leaflet': 'L'
   }
 }
